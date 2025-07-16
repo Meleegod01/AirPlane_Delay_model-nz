@@ -32,9 +32,7 @@ export function InsightsDashboard() {
       const response = await fetch(`${API_BASE_URL}/api/insights`)
 
       if (!response.ok) {
-        // If response is not OK, try to parse error from body, otherwise use status text
-        const errorData = await response.json().catch(() => null)
-        throw new Error(errorData?.error || `HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
 
       const data = await response.json()
@@ -42,11 +40,11 @@ export function InsightsDashboard() {
       if (data.success && data.insights) {
         setInsights(data.insights)
       } else {
-        throw new Error(data.error || "Invalid response format or insights not found")
+        throw new Error(data.error || "Failed to load insights")
       }
     } catch (err) {
       console.error("Insights error:", err)
-      setError(err instanceof Error ? err.message : "Failed to load insights. Please check your backend server.")
+      setError(err instanceof Error ? err.message : "Failed to load insights")
     } finally {
       setIsLoading(false)
     }
